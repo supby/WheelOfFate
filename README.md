@@ -1,11 +1,11 @@
 # WheelOfFate
 
 It an application for picking up some amount of engineers for doing support. 
-It is a kinde of training project to get knowledhe and experince. 
+It is a kinde of training project to get knowledge and experince. 
 
 ### Stack
 
-Thechnicaly it is a .NET Core WebAPI on back-end and React + Typescript on front-end. 
+Technically it is a .NET Core WebAPI on back-end and React + TypeScript on front-end. 
 It is built on layered architecture: API controller + Business Domain Services + DAL repositories.
 As DAL back-end it uses Entity Framework Core.
 
