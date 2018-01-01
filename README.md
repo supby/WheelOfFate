@@ -1,7 +1,7 @@
 # WheelOfFate
 
 It an application for picking up some amount of engineers for doing support. 
-It is a kinde of training project to get knowledge and experince. 
+It is a kinde of training project to get knowledge and experience. 
 
 ### Stack
 
