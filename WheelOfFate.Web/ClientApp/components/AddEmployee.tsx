@@ -8,17 +8,29 @@ interface AddEmployeeProps {
     addEmployee(employee: EmployeesListStore.Employee): void;
 }
 
-export default class AddEmployee extends React.Component<AddEmployeeProps, {}> {
+interface AddEmployeeState {
+    employeeName: string;
+}
+
+export default class AddEmployee extends React.Component<AddEmployeeProps, AddEmployeeState> {
+    constructor()
+    {
+        super();
+        this.state = {employeeName: ''};
+    }
 
     handleOnClick = () => {
-        const input = this.refs.userNameInput as HTMLInputElement;
-        this.props.addEmployee({ id: 0, name: input.value });
-        input.value = '';
+        this.props.addEmployee({ id: 0, name: this.state.employeeName });
+        this.setState({employeeName: ''});
+    }
+
+    onChange = (event:any) => {
+        this.setState({employeeName: event.target.value});
     }
 
     public render() {
         return <div className="input-group">
-                    <input className="form-control" type="text" name="newEmployee" placeholder="New Employee Name" ref="userNameInput" />
+                    <input value={this.state.employeeName} onChange={this.onChange} className="form-control" type="text" placeholder="New Employee Name" />
                     <span className="input-group-btn">
                         <button className="btn btn-primary" onClick={this.handleOnClick}>Add</button>
                     </span>

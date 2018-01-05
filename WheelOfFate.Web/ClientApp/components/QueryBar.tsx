@@ -8,35 +8,64 @@ interface QueryBarProps {
     requestEmployees(bauCapacity:number, minShift:number, workingWindow:number, reqDaysPerWindow:number): void;
 }
 
-export default class QueryBar extends React.Component<QueryBarProps, {}> {
+interface QueryBarState {
+    bauCapacity: number;
+    minShift: number;
+    workingWindow: number;
+    reqDaysPerWindow: number;
+}
+
+export default class QueryBar extends React.Component<QueryBarProps, QueryBarState> {
+
+    constructor()
+    {
+        super();
+        this.state = {
+            bauCapacity: 0,
+            minShift: 0,
+            workingWindow: 0,
+            reqDaysPerWindow: 0
+        };
+    }
 
     handleOnClick = () => {
-        const bauCapacity = this.refs.bauCapacity as HTMLInputElement;
-        const minShift = this.refs.minShift as HTMLInputElement;
-        const workingWindow = this.refs.workingWindow as HTMLInputElement;
-        const reqDaysPerWindow = this.refs.reqDaysPerWindow as HTMLInputElement;
+        this.props.requestEmployees(this.state.bauCapacity, this.state.minShift, 
+                                    this.state.workingWindow, this.state.reqDaysPerWindow);
+    }
 
-        this.props.requestEmployees(Number(bauCapacity.value), Number(minShift.value), 
-                                    Number(workingWindow.value), Number(reqDaysPerWindow.value));
+    onCapacityChange = (event: any) => {
+        this.setState({bauCapacity: event.target.value});
+    }
+
+    onMinShiftChange = (event: any) => {
+        this.setState({minShift: event.target.value});
+    }
+
+    onWindowChange = (event: any) => {
+        this.setState({workingWindow: event.target.value});
+    }
+
+    onDaysPerWindowChange = (event: any) => {
+        this.setState({reqDaysPerWindow: event.target.value});
     }
 
     public render() {
         return <div className="input-group">
                     <div className="col-sm-2">
                         <label>How many employees?</label>
-                        <input className="form-control" type="number" ref="bauCapacity"/>
+                        <input className="form-control" type="number" onChange={this.onCapacityChange} value={this.state.bauCapacity}/>
                     </div>
                     <div className="col-sm-2">
-                        <label>Minimal days between supports?</label>
-                        <input className="form-control" type="number" ref="minShift"/>
+                        <label>Minimal days between shifts?</label>
+                        <input className="form-control" type="number" onChange={this.onMinShiftChange} value={this.state.minShift}/>
                     </div>
                     <div className="col-sm-2">
                         <label>Working cycle (days)</label>
-                        <input className="form-control" type="number" ref="workingWindow"/>
+                        <input className="form-control" type="number" onChange={this.onWindowChange} value={this.state.workingWindow}/>
                     </div>
                     <div className="col-sm-2">
                     <label>Days per window for employee</label>
-                        <input className="form-control" type="number" ref="reqDaysPerWindow"/>
+                        <input className="form-control" type="number" onChange={this.onDaysPerWindowChange} value={this.state.reqDaysPerWindow}/>
                     </div>
                     <div className="col-sm-2">
                         <button className="btn btn-primary" onClick={this.handleOnClick}>Query</button>

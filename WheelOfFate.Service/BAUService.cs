@@ -79,5 +79,24 @@ namespace WheelOfFate.Services
 
             return rndIndexes;
         }
+
+        public void AddShift(IEnumerable<int> employeeIds, int shiftDurationHours)
+        {
+            if (employeeIds == null)
+                throw new ArgumentException("employeeIds");
+
+            historyRepository.Add(employeeIds.Select(x => new HistoryRecord()
+            {
+                Duration = TimeSpan.FromHours(shiftDurationHours/2),
+                EmployeeId = x,
+                Start = DateTime.UtcNow
+            }));
+        }
+
+        public IEnumerable<EmployeeDTO> GetCurrentShift()
+        {
+            var employeeIds = historyRepository.Get(x => x.Start.Add(x.Duration) > DateTime.UtcNow).Select(x => x.EmployeeId);
+            return Mapper.Map<IEnumerable<EmployeeDTO>>(employeeRepository.Get(x => employeeIds.Contains(x.Id)));
+        }
     }
 }

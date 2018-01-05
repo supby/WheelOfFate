@@ -8,5 +8,9 @@ namespace WheelOfFate.Interfaces.Services
     public interface IBAUService
     {
         IEnumerable<EmployeeDTO> GetFor(int bauCapacity, int minShift, int workingWindow, int reqDaysPerWindow);
+
+        void AddShift(IEnumerable<int> employeeIds, int shiftDurationHours);
+
+        IEnumerable<EmployeeDTO> GetCurrentShift();
     }
 }

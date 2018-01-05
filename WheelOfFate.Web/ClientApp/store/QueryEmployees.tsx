@@ -15,18 +15,37 @@ interface QueryEmployeesAction {
     employees: EmployeesListStore.Employee[];
 }
 
-type KnownAction = QueryEmployeesAction;
+interface ClearQueriedEmployeesAction {
+    type: 'CLEAR_QUERIED_EMPLOYEES';
+}
+
+type KnownAction = QueryEmployeesAction | ClearQueriedEmployeesAction;
 
 // action creators
 
 export const actionCreators = {
-    requestEmployees: (bauCapacity:number, minShift:number, workingWindow:number, reqDaysPerWindow:number): AppThunkAction<KnownAction> => (dispatch, getState) => {
+    requestEmployees: (bauCapacity:number, minShift:number, workingWindow:number, reqDaysPerWindow:number): 
+                                                            AppThunkAction<KnownAction> => (dispatch, getState) => {
         fetch(`api/BAU/${bauCapacity}/${minShift}/${workingWindow}/${reqDaysPerWindow}`)
             .then(response => response.json() as Promise<EmployeesListStore.Employee[]>)
             .then(data => {
                 dispatch({ type: 'LOAD_QUERIED_EMPLOYEES', employees: data });
             });
     },
+    addShift: (employeeIds: number[]): AppThunkAction<KnownAction> => (dispatch, getState) => {
+        fetch(`api/BAU`, {
+                method: 'POST',
+                headers: new Headers({
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                }),
+                body: JSON.stringify(employeeIds)
+            })
+            .then(response => response.json() as Promise<EmployeesListStore.Employee[]>)
+            .then(data => {
+                dispatch({ type: 'CLEAR_QUERIED_EMPLOYEES' });
+            });
+    }
 };
 
 // reducer
@@ -39,6 +58,11 @@ export const reducer: Reducer<QueryEmployeesState> = (state: QueryEmployeesState
         case 'LOAD_QUERIED_EMPLOYEES':
             return {
                 employees: action.employees,
+                isLoading: false
+            };
+        case 'CLEAR_QUERIED_EMPLOYEES':
+            return {
+                employees: [],
                 isLoading: false
             };
     }

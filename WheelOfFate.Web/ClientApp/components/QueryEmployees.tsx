@@ -11,8 +11,8 @@ type QueryEmployeesProps = QueryEmployeesStore.QueryEmployeesState
 
 class QueryEmployees extends  React.Component<QueryEmployeesProps, {}> {
 
-    handleQueryClick = () => {
-
+    handleAddShiftClick = () => {
+        this.props.addShift(this.props.employees.map(x => x.id));
     }
 
     public render() {
@@ -22,6 +22,9 @@ class QueryEmployees extends  React.Component<QueryEmployeesProps, {}> {
             </div>
             <div className="row">
                 <EmployeesList employees={this.props.employees} />
+            </div>
+            <div className="row">
+                <button className="btn btn-primary" onClick={this.handleAddShiftClick}>Add Shift</button>
             </div>
         </div>
     }

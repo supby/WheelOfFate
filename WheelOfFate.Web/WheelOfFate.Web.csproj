@@ -38,6 +38,10 @@
     <Content Include="ClientApp\store\QueryEmployees.tsx" />
     <TypeScriptCompile Include="ClientApp\store\index.ts" />
     <Content Include="ClientApp\components\QueryBar.tsx" />
+    <Content Include="ClientApp\components\Layout.tsx" />
+    <Content Include="ClientApp\components\CurrentShiftEmployees.tsx" />
+    <Content Include="ClientApp\store\CurrentShiftEmployees.tsx" />
+    <Content Include="ClientApp\dist\main-server.js" />
   </ItemGroup>
   <Target Name="DebugRunWebpack" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('wwwroot\dist') ">
     <!-- Ensure Node.js is installed -->

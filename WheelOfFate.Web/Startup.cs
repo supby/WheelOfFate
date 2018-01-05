@@ -33,6 +33,8 @@ namespace WheelOfFate_Web
             
             services.AddDbContext<WheelDbContext>(options =>
                 options.UseSqlite(Configuration.GetConnectionString("DefaultDB")));
+            
+            services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
 
             services.AddScoped<IRepository<Employee>, RepositoryBase<Employee>>();
             services.AddScoped<IRepository<HistoryRecord>, RepositoryBase<HistoryRecord>>();
