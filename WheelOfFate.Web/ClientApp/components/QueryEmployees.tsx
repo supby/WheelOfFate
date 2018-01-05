@@ -4,26 +4,24 @@ import { connect } from 'react-redux';
 import { ApplicationState } from '../store';
 import * as QueryEmployeesStore from '../store/QueryEmployees';
 import EmployeesList from './EmployeesList';
+import QueryBar from './QueryBar';
 
 type QueryEmployeesProps = QueryEmployeesStore.QueryEmployeesState
                             & typeof QueryEmployeesStore.actionCreators;
 
 class QueryEmployees extends  React.Component<QueryEmployeesProps, {}> {
+
+    handleQueryClick = () => {
+
+    }
+
     public render() {
         return <div>
             <div className="row">
-                <div className="col-sm-4">
-                    <input className="form-control" type="number" />
-                </div>
-                <div className="col-sm-4">
-                    <input className="form-control" type="number" />
-                </div>
-                <div className="col-sm-4">
-                    <input className="form-control" type="number" />
-                </div>
+                <QueryBar requestEmployees={this.props.requestEmployees}/>
             </div>
             <div className="row">
-            <EmployeesList employees={this.props.employees} />
+                <EmployeesList employees={this.props.employees} />
             </div>
         </div>
     }

@@ -20,15 +20,19 @@ namespace WheelOfFate.Web.Controllers
             this.bauService = bauService;
         }
 
-        // GET: api/BAU/5
-        [HttpGet("{capacity}", Name = "Get")]
-        public IActionResult Get(int capacity)
+        // GET: api/BAU/5/1/14/1
+        [HttpGet("{bauCapacity}/{minShift}/{workingWindow}/{reqDaysPerWindow}", Name = "Get")]
+        public IActionResult Get(int bauCapacity, int minShift, int workingWindow, int reqDaysPerWindow)
         {
-            if(capacity == 0)
+            if(bauCapacity == 0 || minShift == 0 || workingWindow == 0 || reqDaysPerWindow == 0)
             {
                 return BadRequest();
             }
-            return Json(bauService.GetFor(capacity, 1, 14, 1));
+
+            // IEnumerable<EmployeeDTO> GetFor(int bauCapacity, int minShift, int workingWindow, int reqDaysPerWindow);
+
+            //return Json(bauService.GetFor(capacity, 1, 14, 1));
+            return Json(bauService.GetFor(bauCapacity, minShift, workingWindow, reqDaysPerWindow));
         }
     }
 }

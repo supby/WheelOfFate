@@ -20,8 +20,8 @@ type KnownAction = QueryEmployeesAction;
 // action creators
 
 export const actionCreators = {
-    requestEmployees: (): AppThunkAction<KnownAction> => (dispatch, getState) => {
-        fetch(`api/employee`)
+    requestEmployees: (bauCapacity:number, minShift:number, workingWindow:number, reqDaysPerWindow:number): AppThunkAction<KnownAction> => (dispatch, getState) => {
+        fetch(`api/BAU/${bauCapacity}/${minShift}/${workingWindow}/${reqDaysPerWindow}`)
             .then(response => response.json() as Promise<EmployeesListStore.Employee[]>)
             .then(data => {
                 dispatch({ type: 'LOAD_QUERIED_EMPLOYEES', employees: data });

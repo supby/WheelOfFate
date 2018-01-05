@@ -9,7 +9,7 @@ export default class Home extends React.Component<RouteComponentProps<{}>, {}> {
             <div className="col-sm-4">
             <EmployeesManager {...this.props as any} />
             </div>
-            <div className="col-sm-5">
+            <div className="col-sm-7">
             <QueryEmployees {...this.props as any} />
             </div>
         </div>;

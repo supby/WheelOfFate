@@ -37,6 +37,7 @@
     <Content Include="ClientApp\components\EmployeesManager.tsx" />
     <Content Include="ClientApp\store\QueryEmployees.tsx" />
     <TypeScriptCompile Include="ClientApp\store\index.ts" />
+    <Content Include="ClientApp\components\QueryBar.tsx" />
   </ItemGroup>
   <Target Name="DebugRunWebpack" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('wwwroot\dist') ">
     <!-- Ensure Node.js is installed -->

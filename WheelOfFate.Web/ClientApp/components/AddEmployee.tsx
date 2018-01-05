@@ -11,7 +11,7 @@ interface AddEmployeeProps {
 export default class AddEmployee extends React.Component<AddEmployeeProps, {}> {
 
     handleOnClick = () => {
-        var input = this.refs.userNameInput as HTMLInputElement;
+        const input = this.refs.userNameInput as HTMLInputElement;
         this.props.addEmployee({ id: 0, name: input.value });
         input.value = '';
     }
