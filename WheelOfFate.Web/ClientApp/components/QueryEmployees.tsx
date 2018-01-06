@@ -16,16 +16,22 @@ class QueryEmployees extends  React.Component<QueryEmployeesProps, {}> {
     }
 
     public render() {
+        const divStyles = {
+            marginBottom: '20px'
+        };
+
         return <div>
-            <div className="row">
+            <div className="row" style={divStyles}>
                 <QueryBar requestEmployees={this.props.requestEmployees}/>
             </div>
             <div className="row">
                 <EmployeesList employees={this.props.employees} />
             </div>
-            <div className="row">
-                <button className="btn btn-primary" onClick={this.handleAddShiftClick}>Add Shift</button>
-            </div>
+            {this.props.employees.length > 0 &&
+                <div className="row">
+                    <button className="btn btn-primary" onClick={this.handleAddShiftClick}>Add Shift</button>
+                </div>
+            }            
         </div>
     }
 }

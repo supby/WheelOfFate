@@ -15,6 +15,7 @@ namespace WheelOfFate.Web
             Mapper.Initialize(cfg =>
             {
                 cfg.CreateMap<Employee, EmployeeDTO>();
+                cfg.CreateMap<Employee, EmployeeInShiftDTO>();
                 cfg.CreateMap<EmployeeDTO, Employee>();
             });
         }

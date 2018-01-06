@@ -8,7 +8,8 @@ import EmployeesList from './EmployeesList';
 
 type EmployeesManagerProps =
     EmployeesListStore.EmployeesListState
-    & typeof EmployeesListStore.actionCreators;
+    & typeof EmployeesListStore.actionCreators
+    & RouteComponentProps<{}>;
 
 class EmployeesManager extends React.Component<EmployeesManagerProps, {}> {
     componentWillMount() {

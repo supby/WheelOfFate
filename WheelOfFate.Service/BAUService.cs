@@ -34,9 +34,12 @@ namespace WheelOfFate.Services
                                             .Select(y => y.Duration)
                                             .Aggregate((y, z) => y + z));
 
+            var historyByEmployeeId = 
+                    historyRepository.Get().GroupBy(x => x.EmployeeId).ToDictionary(x => x.Key, x => x.AsEnumerable());
+
             var suitableEmployees =
                 Mapper.Map<IEnumerable<EmployeeDTO>>(
-                    employeeRepository.Get().Where(x => LastStartLongerThen(x, minShiftDays)
+                    employeeRepository.Get().Where(x => LastStartLongerThen(x, minShiftDays, historyByEmployeeId)
                                                 && RequiredDaysPerWindow(reqDaysPerWindow, x, employeeDurations)));
 
             return GetUniquieRandomIndexes(bauCapacity, suitableEmployees.Count()).Select(i => suitableEmployees.ElementAt(i));
@@ -48,11 +51,14 @@ namespace WheelOfFate.Services
                    || employeeDurations[x.Id].TotalDays < reqDaysPerWindow;
         }
 
-        private static bool LastStartLongerThen(Employee x, int minShiftDays)
-        {
-            return x.HistoryRecords == null
-                   || x.HistoryRecords.Count() == 0
-                   || x.HistoryRecords.OrderBy(y => y.Id).LastOrDefault(y => (DateTime.UtcNow - y.Start - y.Duration).TotalDays > minShiftDays) != null;
+        private static bool LastStartLongerThen(Employee x, int minShiftDays, 
+                                                Dictionary<int, IEnumerable<HistoryRecord>> historyByEmployeeId)
+        {   
+            return !historyByEmployeeId.ContainsKey(x.Id)
+                   || historyByEmployeeId[x.Id].Count() == 0
+                   || historyByEmployeeId[x.Id]
+                        .OrderBy(y => y.Id)
+                        .LastOrDefault(y => (DateTime.UtcNow - y.Start - y.Duration).TotalDays > minShiftDays) != null;
         }
 
         private static List<int> GetUniquieRandomIndexes(int bauCapacity, int maxValue)
@@ -93,10 +99,21 @@ namespace WheelOfFate.Services
             }));
         }
 
-        public IEnumerable<EmployeeDTO> GetCurrentShift()
+        public IEnumerable<EmployeeInShiftDTO> GetCurrentShift()
         {
-            var employeeIds = historyRepository.Get(x => x.Start.Add(x.Duration) > DateTime.UtcNow).Select(x => x.EmployeeId);
-            return Mapper.Map<IEnumerable<EmployeeDTO>>(employeeRepository.Get(x => employeeIds.Contains(x.Id)));
+            var historyRecords = historyRepository.Get(x => x.Start.Add(x.Duration) > DateTime.UtcNow);
+            var employeeIds = historyRecords.Select(x => x.EmployeeId);
+            var employeesInShift = employeeRepository.Get(x => employeeIds.Contains(x.Id));
+
+            var employeeToHistory = historyRecords.GroupBy(x => x.EmployeeId).ToDictionary(x => x.Key, x => x.OrderBy(y => y.Id).Last());
+
+            return employeesInShift.Select(x => 
+            {
+                var emp = Mapper.Map<EmployeeInShiftDTO>(x);
+                emp.TimeLeft = employeeToHistory[x.Id].Start + employeeToHistory[x.Id].Duration - DateTime.UtcNow;
+
+                return emp;
+            });
         }
     }
 }

@@ -10,6 +10,6 @@ namespace WheelOfFate.Models.Entity
 
         public string Name { get; set; }
 
-        public ICollection<HistoryRecord> HistoryRecords { get; set; }
+        public virtual ICollection<HistoryRecord> HistoryRecords { get; set; }
     }
 }

@@ -50,25 +50,31 @@ export default class QueryBar extends React.Component<QueryBarProps, QueryBarSta
     }
 
     public render() {
-        return <div className="input-group">
-                    <div className="col-sm-2">
-                        <label>How many employees?</label>
-                        <input className="form-control" type="number" onChange={this.onCapacityChange} value={this.state.bauCapacity}/>
+        return <div>
+                    <div className="row">
+                        <div className="form-group col-md-4">
+                            <label className="control-label">How many employees?</label>
+                            <input className="form-control" type="number" onChange={this.onCapacityChange} value={this.state.bauCapacity}/>
+                        </div>
+                        <div className="form-group col-md-4">
+                            <label>Minimal days between shifts?</label>
+                            <input className="form-control" type="number" onChange={this.onMinShiftChange} value={this.state.minShift}/>
+                        </div>
                     </div>
-                    <div className="col-sm-2">
-                        <label>Minimal days between shifts?</label>
-                        <input className="form-control" type="number" onChange={this.onMinShiftChange} value={this.state.minShift}/>
+                    <div className="row">
+                        <div className="form-group col-md-4">
+                            <label>Working cycle (days)</label>
+                            <input className="form-control" type="number" onChange={this.onWindowChange} value={this.state.workingWindow}/>
+                        </div>
+                        <div className="form-group col-md-4">
+                            <label>Days per window for employee</label>
+                            <input className="form-control" type="number" onChange={this.onDaysPerWindowChange} value={this.state.reqDaysPerWindow}/>
+                        </div>
                     </div>
-                    <div className="col-sm-2">
-                        <label>Working cycle (days)</label>
-                        <input className="form-control" type="number" onChange={this.onWindowChange} value={this.state.workingWindow}/>
-                    </div>
-                    <div className="col-sm-2">
-                    <label>Days per window for employee</label>
-                        <input className="form-control" type="number" onChange={this.onDaysPerWindowChange} value={this.state.reqDaysPerWindow}/>
-                    </div>
-                    <div className="col-sm-2">
-                        <button className="btn btn-primary" onClick={this.handleOnClick}>Query</button>
+                    <div className="row">
+                        <div className="col-md-8">
+                            <button className="btn btn-primary pull-right" onClick={this.handleOnClick}>Query</button>
+                        </div>
                     </div>
                 </div>;
     }

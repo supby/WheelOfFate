@@ -3,16 +3,21 @@ import { Action, Reducer, ActionCreator } from 'redux';
 import { AppThunkAction } from './';
 import * as EmployeesListStore from '../store/EmployeesList';
 
+
 // state
 export interface CurrentShiftEmployeesState {
     isLoading: boolean;
-    employees: EmployeesListStore.Employee[];
+    employees: EmployeeInShift[];
+}
+
+export interface EmployeeInShift extends EmployeesListStore.Employee {
+    TimeLeft: string;
 }
 
 // actions
 interface LoadCurrentShiftEmployeesAction {
     type: 'LOAD_CURRENT_SUPPORT_EMPLOYEES';
-    employees: EmployeesListStore.Employee[];
+    employees: EmployeeInShift[];
 }
 
 type KnownAction = LoadCurrentShiftEmployeesAction;
@@ -22,7 +27,7 @@ type KnownAction = LoadCurrentShiftEmployeesAction;
 export const actionCreators = {
     requestEmployees: (): AppThunkAction<KnownAction> => (dispatch, getState) => {
         fetch(`api/BAU`)
-            .then(response => response.json() as Promise<EmployeesListStore.Employee[]>)
+            .then(response => response.json() as Promise<EmployeeInShift[]>)
             .then(data => {
                 dispatch({ type: 'LOAD_CURRENT_SUPPORT_EMPLOYEES', employees: data });
             });

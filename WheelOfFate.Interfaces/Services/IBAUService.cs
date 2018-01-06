@@ -11,6 +11,6 @@ namespace WheelOfFate.Interfaces.Services
 
         void AddShift(IEnumerable<int> employeeIds, int shiftDurationHours);
 
-        IEnumerable<EmployeeDTO> GetCurrentShift();
+        IEnumerable<EmployeeInShiftDTO> GetCurrentShift();
     }
 }
