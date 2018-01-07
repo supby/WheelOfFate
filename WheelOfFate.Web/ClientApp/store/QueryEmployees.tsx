@@ -33,7 +33,7 @@ export const actionCreators = {
             });
     },
     addShift: (employeeIds: number[]): AppThunkAction<KnownAction> => (dispatch, getState) => {
-        fetch(`api/BAU`, {
+        fetch('api/BAU', {
                 method: 'POST',
                 headers: new Headers({
                 'Accept': 'application/json',
@@ -41,7 +41,6 @@ export const actionCreators = {
                 }),
                 body: JSON.stringify(employeeIds)
             })
-            .then(response => response.json() as Promise<EmployeesListStore.Employee[]>)
             .then(data => {
                 dispatch({ type: 'CLEAR_QUERIED_EMPLOYEES' });
             });

@@ -11,7 +11,7 @@ export interface CurrentShiftEmployeesState {
 }
 
 export interface EmployeeInShift extends EmployeesListStore.Employee {
-    TimeLeft: string;
+    timeLeft: string;
 }
 
 // actions

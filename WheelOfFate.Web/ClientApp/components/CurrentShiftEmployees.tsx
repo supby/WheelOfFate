@@ -30,7 +30,14 @@ class CurrentShiftEmployees extends  React.Component<CurrentShiftEmployeesProps,
         return <div>
             <label>Current shift employees list</label>
             <div className="row">
-                <EmployeesList employees={this.props.employees} />
+                <ul className="list-group">
+                        {(this.props.employees || []).map(employee =>
+                            <li className="list-group-item" key={employee.id}>
+                                <span>{employee.name}</span>
+                                <span className="pull-right">{employee.timeLeft.substring(0, 8)}</span>
+                            </li>
+                        )}
+                </ul>
             </div>
         </div>
     }
