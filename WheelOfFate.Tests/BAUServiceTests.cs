@@ -20,6 +20,7 @@ namespace WheelOfFate.Tests
         private readonly List<HistoryRecord> historyRecords1;
         private readonly List<HistoryRecord> historyRecords2;
         private readonly List<HistoryRecord> historyRecords3;
+        private readonly List<HistoryRecord> historyRecords4;
         private readonly List<Employee> employeesZeroHistory;
         private readonly List<Employee> employeesWithHistory1;
         private readonly List<Employee> employeesWithHistory2;
@@ -54,6 +55,14 @@ namespace WheelOfFate.Tests
                     new HistoryRecord() { EmployeeId = 2, Start = DateTime.UtcNow - TimeSpan.FromDays(1), Duration = TimeSpan.FromHours(12) },                    
                     new HistoryRecord() { EmployeeId = 3, Start = DateTime.UtcNow - TimeSpan.FromDays(1), Duration = TimeSpan.FromHours(12) },                    
                     new HistoryRecord() { EmployeeId = 4, Start = DateTime.UtcNow - TimeSpan.FromDays(1), Duration = TimeSpan.FromHours(12) },                    
+            };
+
+            historyRecords4 = new List<HistoryRecord>()
+            {
+                    new HistoryRecord() { EmployeeId = 1, Start = DateTime.UtcNow - TimeSpan.FromHours(1), Duration = TimeSpan.FromHours(12) },
+                    new HistoryRecord() { EmployeeId = 2, Start = DateTime.UtcNow - TimeSpan.FromHours(1), Duration = TimeSpan.FromHours(12) },
+                    new HistoryRecord() { EmployeeId = 3, Start = DateTime.UtcNow - TimeSpan.FromHours(1), Duration = TimeSpan.FromHours(12) },
+                    new HistoryRecord() { EmployeeId = 4, Start = DateTime.UtcNow - TimeSpan.FromDays(2), Duration = TimeSpan.FromHours(12) },
             };
 
             employeesZeroHistory = new List<Employee>()
@@ -189,6 +198,87 @@ namespace WheelOfFate.Tests
             var res = target.GetFor(3, 1, 14, 1).ToList();
 
             Assert.Empty(res);
+        }
+
+        // if we pass null to AddShift method
+        [Fact]
+        public void AddShiftWithException()
+        {
+            Assert.Throws<ArgumentException>(() => 
+                new BAUService(employeeRepositoryMock.Object, historyRepositoryMock.Object).AddShift(null, 5));
+        }
+
+        // verify that Records which was passed to repository inside AddShift
+        [Fact]
+        public void AddShiftWithVerifyInput()
+        {
+            var employeeIds = new List<int>() { 1, 2, 3 };
+
+            historyRepositoryMock.Setup(x => x.Add(It.IsAny<IEnumerable<HistoryRecord>>()));
+
+            var target = new BAUService(employeeRepositoryMock.Object, historyRepositoryMock.Object);
+            target.AddShift(employeeIds, 6);
+            
+            historyRepositoryMock
+                .Verify(m => 
+                    m.Add(It.Is<IEnumerable<HistoryRecord>>(h => 
+                                    h.Count() == 3 
+                                    && h.Any(x => x.EmployeeId == 1) 
+                                    && h.Any(x => x.EmployeeId == 2) 
+                                    && h.Any(x => x.EmployeeId == 3))),
+                    Times.Once);
+        }
+
+        // Check that after AddShift we get Added records from GetCurrentShift
+        [Fact]
+        public void GetCurrentShiftWithEmployeesFull()
+        {
+            var employeeIds = new List<int>() { 1, 2, 3 };
+
+            historyRepositoryMock.Setup(x => x.Add(It.IsAny<IEnumerable<HistoryRecord>>()));
+            employeeRepositoryMock
+                .Setup(x => x.Get(It.IsAny<Func<Employee, bool>>()))
+                .Returns(employeesWithHistory1.Where(x => employeeIds.Contains(x.Id)));
+
+            historyRepositoryMock
+                .Setup(x => x.Get(It.IsAny<Func<HistoryRecord, bool>>()))
+                .Returns(historyRecords4.Where(x => x.Start.Add(x.Duration) > DateTime.UtcNow));
+
+            var target = new BAUService(employeeRepositoryMock.Object, historyRepositoryMock.Object);
+            target.AddShift(employeeIds, 6);
+
+            var res = target.GetCurrentShift();
+
+            Assert.Equal(employeeIds.Count(), res.Count());
+            Assert.True(res.Any(x => x.Id == 1) && res.Any(x => x.Id == 2) && res.Any(x => x.Id == 3));
+        }
+
+        // Check that if we added Shift and some shifts were end, 
+        // GetCurrentShift doesnt return expired records
+        [Fact]
+        public void GetCurrentShiftWithEmployeesWhithOneExpired()
+        {
+            var employeeIds = new List<int>() { 1, 2, 4 };
+
+            IEnumerable<HistoryRecord> shiftRecords = 
+                historyRecords4.Where(x => x.Start.Add(x.Duration) > DateTime.UtcNow);
+
+            historyRepositoryMock
+                .Setup(x => x.Get(It.IsAny<Func<HistoryRecord, bool>>()))
+                .Returns(shiftRecords);
+
+            historyRepositoryMock.Setup(x => x.Add(It.IsAny<IEnumerable<HistoryRecord>>()));
+            employeeRepositoryMock
+                .Setup(x => x.Get(It.IsAny<Func<Employee, bool>>()))
+                .Returns(employeesWithHistory1.Where(x => shiftRecords.Any(y => y.EmployeeId == x.Id)));
+
+            var target = new BAUService(employeeRepositoryMock.Object, historyRepositoryMock.Object);
+            target.AddShift(employeeIds, 6);
+
+            var res = target.GetCurrentShift();
+
+            Assert.Equal(employeeIds.Count(), res.Count());
+            Assert.True(res.Any(x => x.Id == 1) && res.Any(x => x.Id == 2) && res.Any(x => x.Id == 3));
         }
     }
 }
