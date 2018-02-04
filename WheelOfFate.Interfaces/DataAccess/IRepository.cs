@@ -4,6 +4,10 @@ using System.Text;
 
 namespace WheelOfFate.Interfaces.DataAccess
 {
+    /// <summary>
+    /// Repository to work with DB layer
+    /// </summary>
+    /// <typeparam name="TEntity">Entity type</typeparam>
     public interface IRepository<TEntity> where TEntity : class
     {
         void Add(TEntity item);

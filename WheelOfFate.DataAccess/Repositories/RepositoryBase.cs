@@ -7,11 +7,19 @@ using WheelOfFate.Interfaces.DataAccess;
 
 namespace WheelOfFate.DataAccess
 {
+    /// <summary>
+    /// Repository to work with DB layer
+    /// </summary>
+    /// <typeparam name="TEntity">Entity type</typeparam>
     public class RepositoryBase<TEntity> : IRepository<TEntity> where TEntity : class
     {
         private readonly WheelDbContext _context;
         DbSet<TEntity> _dbSet;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="context">EntityFramework context</param>
         public RepositoryBase(WheelDbContext context)
         {
             _context = context;

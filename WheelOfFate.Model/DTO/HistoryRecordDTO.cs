@@ -4,6 +4,9 @@ using System.Text;
 
 namespace WheelOfFate.Models.DTO
 {
+    /// <summary>
+    /// History record for employees shifts
+    /// </summary>
     public class HistoryRecordDTO
     {
         public int Id { get; set; }

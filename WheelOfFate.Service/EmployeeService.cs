@@ -10,10 +10,17 @@ using WheelOfFate.Models.Entity;
 
 namespace WheelOfFate.Services
 {
+    /// <summary>
+    /// Simple employees management service
+    /// </summary>
     public class EmployeeService : IEmployeeService
     {
         private readonly IRepository<Employee> employeeRepository;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="employeeRepository">DB repository for Employee entity</param>
         public EmployeeService(IRepository<Employee> employeeRepository)
         {
             this.employeeRepository = employeeRepository;

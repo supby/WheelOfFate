@@ -5,6 +5,9 @@ using WheelOfFate.Models.DTO;
 
 namespace WheelOfFate.Interfaces.Services
 {
+    /// <summary>
+    /// Simple employees management service
+    /// </summary>
     public interface IEmployeeService
     {
         IEnumerable<EmployeeDTO> Save(IEnumerable<EmployeeDTO> employees);
